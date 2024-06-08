@@ -2,7 +2,7 @@ package ru.surf.model;
 
 import ru.surf.enums.OS;
 import ru.surf.enums.Vendor;
-import ru.surf.utils.Loggger; 
+import ru.surf.service.Loggger; 
 
 public class AppleDevice extends Device implements Comparable<AppleDevice> {
     private final Loggger logger = Loggger.getInstance();

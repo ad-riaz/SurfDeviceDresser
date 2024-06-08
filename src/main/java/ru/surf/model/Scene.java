@@ -9,6 +9,8 @@ import java.io.File;
 
 import javax.imageio.ImageIO;
 
+import ru.surf.service.FontLoader;
+import ru.surf.service.Loggger;
 import ru.surf.utils.*;
 
 public class Scene {

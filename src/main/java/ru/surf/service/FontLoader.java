@@ -1,4 +1,4 @@
-package ru.surf.utils;
+package ru.surf.service;
 
 import java.awt.Font;
 import java.io.IOException;

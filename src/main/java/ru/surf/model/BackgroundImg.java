@@ -4,7 +4,7 @@ import java.io.InputStream;
 
 import javax.imageio.ImageIO;
 
-import ru.surf.utils.Loggger;
+import ru.surf.service.Loggger;
 
 public class BackgroundImg extends Img {
     private final Loggger logger = Loggger.getInstance();

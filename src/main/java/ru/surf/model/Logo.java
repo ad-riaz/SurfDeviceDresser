@@ -1,7 +1,8 @@
 package ru.surf.model;
 
 import java.io.InputStream;
-import ru.surf.utils.Loggger;
+
+import ru.surf.service.Loggger;
 
 public class Logo extends Img {
     private final Loggger logger = Loggger.getInstance();

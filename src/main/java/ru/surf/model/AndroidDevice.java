@@ -2,7 +2,7 @@ package ru.surf.model;
 
 import ru.surf.enums.OS;
 import ru.surf.enums.Vendor;
-import ru.surf.utils.Loggger; 
+import ru.surf.service.Loggger; 
 
 public class AndroidDevice extends Device implements Comparable<AndroidDevice> {
     private final Loggger logger = Loggger.getInstance();

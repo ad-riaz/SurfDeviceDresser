@@ -1,4 +1,4 @@
-package ru.surf.utils;
+package ru.surf.service;
 
 import java.util.logging.*;
 
