@@ -20,7 +20,7 @@ public class Scene {
     public  Color   textColor;
     private int     width;
     private int     height;
-    private File outputFile; 
+    private File    outputFile; 
     private int     defaultFontSize;
     private int     lineHeight;
     private Font    font;
@@ -44,21 +44,12 @@ public class Scene {
         this.device = device;
     }
     
+    // FIXME: Проверить и переделать логику рисования текста (см. отступы, размер шрифтв)
     public void create() {
         // Определяем параметры устройства и создаем сцену
         deviceName = device.getVendor().toString() + " " + device.getDeviceName();
         os = device.getOsType() + " " + device.getOsVersion();
         screen = device.getDiagonal() + "  " + device.getScreenWidth() + "x" + device.getScreenHeight();
-
-        // Проверка на класс, если понадобятся классозависимые поля
-        // if (device instanceof AndroidDevice) {
-        //     AndroidDevice AndroidDevice = (AndroidDevice) device;
-        // } else if (device instanceof AppleDevice) {
-        //     AppleDevice AppleDevice = (AppleDevice) device;
-        // }
-        
-        // TODO: Задать путь до входных и выходных файлов через application.properties
-        // Указать путь в виде строки и распарсить его для использования в Paths.get()
 
         // Определяем параметры сцены
         width = device.getScreenWidth();
@@ -89,7 +80,6 @@ public class Scene {
             vertMiddle += drawString(lines[i], vertMiddle);
         }        
 
-        //
         g.dispose();
     }
 
@@ -145,8 +135,8 @@ public class Scene {
         // Нарисовать подложку
         g.drawImage(
             backgroundImg.getImage(),
-            backgroundImg.getxPos(), 
-            backgroundImg.getyPos(), 
+            backgroundImg.getxPosOnCanvas(), 
+            backgroundImg.getyPosOnCanvas(), 
             backgroundImg.getWidth(), 
             backgroundImg.getHeight(), 
             null
@@ -158,7 +148,7 @@ public class Scene {
         // Нарисовать логотип    
         g.drawImage(
             logoImg.getImage(), 
-            logoImg.getxPos(), 
+            logoImg.getxPosOnCanvas(), 
             logoImg.getYPos(), 
             logoImg.getWidth(), 
             logoImg.getHeight(), 

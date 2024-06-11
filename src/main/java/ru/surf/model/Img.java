@@ -1,39 +1,28 @@
 package ru.surf.model;
 
-import java.awt.image.BufferedImage;
-import java.io.InputStream;
+import java.awt.Image;
 
-import javax.imageio.ImageIO;
-
-import ru.surf.service.Loggger;
+import ru.surf.service.ImageFromFileReader;
 
 public abstract class Img {
-    private final Loggger logger = Loggger.getInstance();
-
     protected int width;
     protected int height;
-    protected int xPos;
-    protected int yPos;
-    protected BufferedImage image;
+    protected int xPosOnCanvas;
+    protected int yPosOnCanvas;
+    protected Image image;
 
     protected Img(
         int width,
         int height,
         int xPos,
         int yPos,
-        InputStream inputStream
+        String filePath
     ) {
         this.width = width;
         this.height = height;
-        this.xPos = xPos;
-        this.yPos = yPos;
-        
-        try {
-            image = ImageIO.read(inputStream);
-        } catch (Exception e) {
-            logger.logError("Не удалось загрузить изображение из файла | " + e.getMessage());
-            image = null;
-        }
+        this.xPosOnCanvas = xPos;
+        this.yPosOnCanvas = yPos;
+        this.image = ImageFromFileReader.readImageFromFile(filePath);
     }
 
     public int getWidth() {
@@ -44,21 +33,21 @@ public abstract class Img {
         return height;
     }
 
-    public int getxPos() {
-        return xPos;
+    public int getxPosOnCanvas() {
+        return xPosOnCanvas;
     }
 
-    public int getyPos() {
-        return yPos;
+    public int getyPosOnCanvas() {
+        return yPosOnCanvas;
     }
 
-    public BufferedImage getImage() {
+    public Image getImage() {
         return image;
     }
 
     @Override
     public String toString() {
-        return "Img [width=" + width + ", height=" + height + ", xPos=" + xPos + ", yPos=" + yPos + ", image=" + image
+        return "Img [width=" + width + ", height=" + height + ", xPos=" + xPosOnCanvas + ", yPos=" + yPosOnCanvas + ", image=" + image
                 + "]";
-    }    
+    }
 }

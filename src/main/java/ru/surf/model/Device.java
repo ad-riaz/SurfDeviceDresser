@@ -2,7 +2,6 @@ package ru.surf.model;
 
 import ru.surf.enums.OS;
 import ru.surf.enums.Vendor;
-import ru.surf.service.Loggger; 
 
 public abstract class Device {
     protected Vendor vendor;

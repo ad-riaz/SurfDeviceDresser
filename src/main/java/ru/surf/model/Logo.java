@@ -1,38 +1,37 @@
 package ru.surf.model;
+import java.awt.Image;
 
-import java.io.InputStream;
-
+import ru.surf.service.ImageFromFileReader;
 import ru.surf.service.Loggger;
 
 public class Logo extends Img {
+    // TODO: Load static variables from application.properties
+    private static final String logoPath = "/img/logo.png";
+    private static final int logoWidthPercentage = 90; 
+    private static final int yPosOnCanvas = 100;
     private final Loggger logger = Loggger.getInstance();
-
-    private static final InputStream is = Logo.class.getResourceAsStream("/img/logo.png");
-    private final static double dimensionsRatio = 1.4;
-    private final static int imageWidthPercentage = 90;
-    private final static int yPos = 100;
 
     public Logo(int sceneWidth) {
         super(
-            sceneWidth * imageWidthPercentage / 100, 
-            (int) Math.round((double) (sceneWidth * imageWidthPercentage / 100 / dimensionsRatio)), 
-            (sceneWidth - sceneWidth * imageWidthPercentage / 100) / 2, 
-            yPos, 
-            is);
-            System.out.println("sceneWidth in logo: " + sceneWidth);
+            sceneWidth * logoWidthPercentage / 100, 
+            (int) Math.round((double) (sceneWidth * logoWidthPercentage / 100 / calcDimensionsRatio())), 
+            (sceneWidth - sceneWidth * logoWidthPercentage / 100) / 2, 
+            yPosOnCanvas, 
+            logoPath);
         logger.logInfo("Объект Logo был успешно создан");
     }
 
-    public double getDimensionsRatio() {
-        return dimensionsRatio;
+    private static double calcDimensionsRatio() {
+        Image logo = ImageFromFileReader.readImageFromFile(logoPath);
+        return Math.round((double) logo.getWidth(null) / logo.getHeight(null) * 100.00) / 100.00;
     }
 
     public int getWidthPercentage() {
-        return imageWidthPercentage;
+        return logoWidthPercentage;
     }    
 
     public int getYPos() {
-        return yPos;
+        return yPosOnCanvas;
     }
 
     @Override
@@ -40,8 +39,8 @@ public class Logo extends Img {
         return "Logo:\n" + 
         "width: " + this.width + "\n" +
         "Height: " + this.height + "\n" +
-        "xPos: " + xPos + "\n" +
-        "yPos: " + yPos + "\n" +
-        "percentage: " + imageWidthPercentage;
+        "xPos: " + xPosOnCanvas + "\n" +
+        "yPos: " + yPosOnCanvas + "\n" +
+        "percentage: " + logoWidthPercentage;
     }
 }

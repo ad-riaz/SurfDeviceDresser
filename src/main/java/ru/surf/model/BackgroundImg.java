@@ -1,28 +1,16 @@
 package ru.surf.model;
 
-import java.io.InputStream;
-
-import javax.imageio.ImageIO;
-
 import ru.surf.service.Loggger;
+import ru.surf.service.ImageCropper;
 
 public class BackgroundImg extends Img {
     private final Loggger logger = Loggger.getInstance();
-    private static final InputStream is = BackgroundImg.class.getResourceAsStream("/img/background.jpg");
+    // TODO: Load from application.properties
+    private static String filePath = "/img/background.jpg";
 
-    public BackgroundImg(int width, int height, int xPos, int yPos) {
-        super(width, height, xPos, yPos, is);
+    public BackgroundImg(int screenWidth, int screenHeight, int xPosOnCanvas, int yPosOnCanvas) {
+        super(screenWidth, screenHeight, xPosOnCanvas, yPosOnCanvas, filePath);
+        this.image = ImageCropper.cropImage(screenWidth, screenHeight, this.getImage());
         logger.logInfo("Объект Background был успешно создан");
-    }
-
-    // TODO: Crop image
-    public void kekw() {
-        try {
-            image = ImageIO.read(is);
-            image.getWidth();
-        } catch (Exception e) {
-            logger.logError("Не удалось загрузить изображение из файла | " + e.getMessage());
-            image = null;
-        }
     }
 }
