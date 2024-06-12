@@ -1,14 +1,14 @@
 package ru.surf.model;
 import java.awt.Image;
 
+import ru.surf.service.AppPropertiesReader;
 import ru.surf.service.ImageFromFileReader;
 import ru.surf.service.Loggger;
 
 public class Logo extends Img {
-    // TODO: Load static variables from application.properties
-    private static final String logoPath = "/img/logo.png";
-    private static final int logoWidthPercentage = 90; 
-    private static final int yPosOnCanvas = 100;
+    private static String logoPath = AppPropertiesReader.getInstance().readProperty("logoPath", "/img/logo.png");
+    private static final int logoWidthPercentage = Integer.parseInt(AppPropertiesReader.getInstance().readProperty("logoWidthPercentage", "90")); 
+    private static final int yPosOnCanvas = Integer.parseInt(AppPropertiesReader.getInstance().readProperty("yPosOnCanvas", "100"));
     private final Loggger logger = Loggger.getInstance();
 
     public Logo(int sceneWidth) {
