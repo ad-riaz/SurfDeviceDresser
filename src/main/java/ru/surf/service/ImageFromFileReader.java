@@ -15,7 +15,7 @@ public class ImageFromFileReader {
         
         try {
             InputStream is = ImageFromFileReader.class.getResourceAsStream(filePath);
-            if (is.equals(null)) {
+            if (is == null) {
                 throw new FileNotFoundException();
             }
             image = ImageIO.read(is);

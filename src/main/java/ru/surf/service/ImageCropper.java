@@ -12,7 +12,7 @@ public class ImageCropper {
     public static Image cropImage(int areaWidth, int areaHeight, Image source) {
         Image emptyImage = new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB);
         
-        if (source.equals(null)) {
+        if (source == null) {
             return emptyImage;
         }
         
