@@ -6,7 +6,7 @@ import ru.surf.service.ImageCropper;
 
 public class BackgroundImg extends Img {
     private final Loggger logger = Loggger.getInstance();
-    private static String filePath = AppPropertiesReader.getInstance().readProperty("backgroundPath", "/img/background.jpg");
+    private static String filePath = AppPropertiesReader.getInstance().readProperty("backgroundPath", "./src/main/resources/img/background.jpg");
 
     public BackgroundImg(int screenWidth, int screenHeight, int xPosOnCanvas, int yPosOnCanvas) {
         super(screenWidth, screenHeight, xPosOnCanvas, yPosOnCanvas, filePath);

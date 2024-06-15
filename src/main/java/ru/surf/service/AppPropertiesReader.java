@@ -45,10 +45,12 @@ public class AppPropertiesReader {
     } 
 
     public void close() {
-        try {
-            is.close();
-        } catch (IOException e) {
-            logger.logError("Не получилось закрыть InputStream в AppPropertiesReader \n" + e.getMessage());
+        if (is != null) {
+            try {
+                is.close();
+            } catch (IOException e) {
+                logger.logError("Не получилось закрыть InputStream в AppPropertiesReader \n" + e.getMessage());
+            }
         }
     }
 }

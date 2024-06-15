@@ -9,6 +9,8 @@ import java.io.File;
 
 import javax.imageio.ImageIO;
 
+import ru.surf.service.AppPropertiesReader;
+import ru.surf.service.ColorCreator;
 import ru.surf.service.FontLoader;
 import ru.surf.service.Loggger;
 import ru.surf.utils.*;
@@ -56,7 +58,9 @@ public class Scene {
         height = device.getScreenHeight();
         defaultFontSize = defineDefaultFontSize(width);
         font = defineDefaultFont(defaultFontSize);
-        textColor = Color.WHITE;
+        textColor = ColorCreator.create(
+            AppPropertiesReader.getInstance().readProperty("fontColor", "255,255,255")
+        );
         lineHeight = (int) Math.round(height * 0.02 / 5);
         outputFile = new File(deviceName.replace(" ", "_") + "_" + os.replace(" ", "_") + ".png");
 
@@ -85,10 +89,11 @@ public class Scene {
 
     private Font defineDefaultFont(int defaultFontSize) {
         GraphicsEnvironment ge = null;
-
+        String fontFilePath = AppPropertiesReader.getInstance().readProperty("font", "./src/main/resources/fonts/default-font.ttf");
+        
         try {
             ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-            Font defaultFont = FontLoader.loadFont("default-font.ttf", defaultFontSize, "bold");
+            Font defaultFont = FontLoader.loadFont(fontFilePath, defaultFontSize, "bold");
             ge.registerFont(defaultFont);
             return defaultFont;
         } catch (Exception e) {
@@ -99,17 +104,28 @@ public class Scene {
     }
 
     private int defineDefaultFontSize(int screenWidth) {
-        int deviceNamefontSize = 0;
+        int fontSize = 80;
+        float fontSizeFactor = 1.3f;
+        String stringFontSize = AppPropertiesReader.getInstance().readProperty("fontSize", "70");
+        String autoFontSizingEnabled = AppPropertiesReader.getInstance().readProperty("autoFontSizingEnabled", "false");
 
-        if (screenWidth <= 830) {
-            deviceNamefontSize = 70;
-        } else if (screenWidth > 830 && screenWidth <= 1440) {
-            deviceNamefontSize = 100;
-        } else if (screenWidth > 1440) {
-            deviceNamefontSize = 130;
+        try {
+            int customFontSize = Integer.parseInt(stringFontSize);
+            if (customFontSize > 0) fontSize = customFontSize;
+        } catch(NumberFormatException e) {
+            logger.logError("Произошла ошибка при чтении размера шрифта из файла конфигурации.\n" +
+            "Размер шрифта не может быть равен " + stringFontSize + "\nБыл использован размер шрифта " + fontSize);
         }
 
-        return deviceNamefontSize;
+        if (autoFontSizingEnabled.equals("true")) {
+            if (screenWidth <= 830) {
+                fontSize /= fontSizeFactor;
+            } else if (screenWidth > 1440) {
+                fontSize *= fontSizeFactor;
+            }
+        }       
+
+        return fontSize;
     }
 
     public void exportBackground() {
@@ -166,7 +182,7 @@ public class Scene {
     }
 
     private int drawString(String string, int yPos) {
-        if ((width - getStringWidth(string)) >= 40) {
+        if ((width - getStringWidth(string)) >= 100) {
             int deviceNameStringX = (width - getStringWidth(string)) / 2;
             g.drawString(string, deviceNameStringX, yPos);
             return (getStringHeight() * 2 + lineHeight);

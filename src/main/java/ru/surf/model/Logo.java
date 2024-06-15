@@ -6,7 +6,7 @@ import ru.surf.service.ImageFromFileReader;
 import ru.surf.service.Loggger;
 
 public class Logo extends Img {
-    private static String logoPath = AppPropertiesReader.getInstance().readProperty("logoPath", "/img/logo.png");
+    private static String logoPath = AppPropertiesReader.getInstance().readProperty("logoPath", "./src/main/resources/img/logo.png");
     private static final int logoWidthPercentage = Integer.parseInt(AppPropertiesReader.getInstance().readProperty("logoWidthPercentage", "90")); 
     private static final int yPosOnCanvas = Integer.parseInt(AppPropertiesReader.getInstance().readProperty("yPosOnCanvas", "100"));
     private final Loggger logger = Loggger.getInstance();
