@@ -3,7 +3,6 @@ package ru.surf.model;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics2D;
-import java.awt.GraphicsEnvironment;
 import java.awt.image.BufferedImage;
 import java.io.File;
 
@@ -11,7 +10,7 @@ import javax.imageio.ImageIO;
 
 import ru.surf.service.AppPropertiesReader;
 import ru.surf.service.ColorCreator;
-import ru.surf.service.FontLoader;
+import ru.surf.service.FontService;
 import ru.surf.service.Loggger;
 import ru.surf.utils.*;
 
@@ -56,8 +55,8 @@ public class Scene {
         // Определяем параметры сцены
         width = device.getScreenWidth();
         height = device.getScreenHeight();
-        defaultFontSize = defineDefaultFontSize(width);
-        font = defineDefaultFont(defaultFontSize);
+        defaultFontSize = FontService.defineDefaultFontSize(width);
+        font = FontService.setEnvironmentFont(defaultFontSize);
         textColor = ColorCreator.create(
             AppPropertiesReader.getInstance().readProperty("fontColor", "255,255,255")
         );
@@ -85,47 +84,6 @@ public class Scene {
         }        
 
         g.dispose();
-    }
-
-    private Font defineDefaultFont(int defaultFontSize) {
-        GraphicsEnvironment ge = null;
-        String fontFilePath = AppPropertiesReader.getInstance().readProperty("font", "./src/main/resources/fonts/default-font.ttf");
-        
-        try {
-            ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-            Font defaultFont = FontLoader.loadFont(fontFilePath, defaultFontSize, "bold");
-            ge.registerFont(defaultFont);
-            return defaultFont;
-        } catch (Exception e) {
-            logger.logError(e.getMessage());
-            // TODO: Подумать, что можно сделать с null
-            return null;
-        }            
-    }
-
-    private int defineDefaultFontSize(int screenWidth) {
-        int fontSize = 80;
-        float fontSizeFactor = 1.3f;
-        String stringFontSize = AppPropertiesReader.getInstance().readProperty("fontSize", "70");
-        String autoFontSizingEnabled = AppPropertiesReader.getInstance().readProperty("autoFontSizingEnabled", "false");
-
-        try {
-            int customFontSize = Integer.parseInt(stringFontSize);
-            if (customFontSize > 0) fontSize = customFontSize;
-        } catch(NumberFormatException e) {
-            logger.logError("Произошла ошибка при чтении размера шрифта из файла конфигурации.\n" +
-            "Размер шрифта не может быть равен " + stringFontSize + "\nБыл использован размер шрифта " + fontSize);
-        }
-
-        if (autoFontSizingEnabled.equals("true")) {
-            if (screenWidth <= 830) {
-                fontSize /= fontSizeFactor;
-            } else if (screenWidth > 1440) {
-                fontSize *= fontSizeFactor;
-            }
-        }       
-
-        return fontSize;
     }
 
     public void exportBackground() {

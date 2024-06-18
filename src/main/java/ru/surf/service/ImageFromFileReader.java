@@ -6,7 +6,12 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
+
 import javax.imageio.ImageIO;
+
+import ru.surf.model.Img;
 
 public class ImageFromFileReader {
     private final static Loggger logger = Loggger.getInstance();
@@ -33,5 +38,23 @@ public class ImageFromFileReader {
             }
             return image;
         }
+    }
+
+    public static String getDefaultfilePath(String filename) {
+        ClassLoader cl = ImageFromFileReader.class.getClassLoader();
+        String defaultPath = URLDecoder.decode(
+            cl.getResource("img/" + filename)
+            .toString(),
+            StandardCharsets.UTF_8
+        );
+
+        if (
+            defaultPath.contains("jar:")
+        ) {
+            defaultPath = "src/main/resources/img/" + filename;
+        } else {
+            defaultPath = defaultPath.replace("file:", "");
+        }
+        return defaultPath;
     }
 }

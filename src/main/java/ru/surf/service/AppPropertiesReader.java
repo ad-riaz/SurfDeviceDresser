@@ -42,7 +42,20 @@ public class AppPropertiesReader {
             return defaultValue;
         }
         return value;
-    } 
+    }
+
+    @SuppressWarnings("finally")
+    public int readIntegerValue(String propertyKey, int defaultValue) {
+        int value = defaultValue;
+        String propValue = this.readProperty(propertyKey, Integer.toString(defaultValue));
+        try {
+            value = Integer.parseInt(propValue);
+        } catch (NumberFormatException e) {
+            logger.logError("Невозможно установить целочисленному значению величину " + propValue + "\n" + e.getMessage());
+        } finally {
+            return value;
+        }
+    }
 
     public void close() {
         if (is != null) {
