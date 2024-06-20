@@ -2,6 +2,7 @@ package ru.surf.enums;
 
 public enum OS {
     IOS("iOS"),
+    IPADOS("iPadOS"),
     ANDROID("Android");
 
     private String os;

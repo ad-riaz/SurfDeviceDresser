@@ -61,7 +61,7 @@ public class DeviceInformationConsoleReader {
 
             if (os.equals(OS.ANDROID)) {
                 printEnumValues(AndroidVendor.class);
-            } else if (os.equals(OS.IOS)) {
+            } else if (os.equals(OS.IOS) || os.equals(OS.IPADOS)) {
                 printEnumValues(AppleVendor.class);
             }
 
@@ -78,7 +78,7 @@ public class DeviceInformationConsoleReader {
                         continue;
                     }
                     vendor = AndroidVendor.values()[--vendorNum];
-                } else if (os.equals(OS.IOS)) {
+                } else if (os.equals(OS.IOS) || os.equals(OS.IPADOS)) {
                     if (vendorNum > AppleVendor.values().length || vendorNum < 1) {
                         System.out.println(
                                 "\n\nНеверное значение!\nВведи число от 1 до " + AppleVendor.values().length + "\n");
@@ -162,7 +162,7 @@ public class DeviceInformationConsoleReader {
 
         if (os.equals(OS.ANDROID)) {
             device = new AndroidDevice();
-        } else if (os.equals(OS.IOS)) {
+        } else if (os.equals(OS.IOS) || os.equals(OS.IPADOS)) {
             device = new AppleDevice();
         }
 
