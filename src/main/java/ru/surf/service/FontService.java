@@ -38,7 +38,7 @@ public class FontService {
             int customFontSize = Integer.parseInt(stringFontSize);
             if (customFontSize > 0) fontSize = customFontSize;
         } catch(NumberFormatException e) {
-            logger.logError("Произошла ошибка при чтении размера шрифта из файла конфигурации.\n" +
+            logger.logWarning("Произошла ошибка при чтении размера шрифта из файла конфигурации.\n" +
             "Размер шрифта не может быть равен " + stringFontSize + "\nБыл использован размер шрифта " + fontSize);
         }
 

@@ -20,7 +20,6 @@ public class Logo extends Img {
             (sceneWidth - sceneWidth * logoWidthPercentage / 100) / 2, 
             yPosOnCanvas, 
             logoPath);
-        logger.logInfo("Объект Logo был успешно создан");
     }
 
     private static double calcDimensionsRatio() {

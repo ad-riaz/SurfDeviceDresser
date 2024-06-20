@@ -27,7 +27,7 @@ public class ColorCreator {
                     throw new NumberFormatException();
                 }                
             } catch (NumberFormatException e) {
-                logger.logError("Не получилось создать цвет из строки \"" + 
+                logger.logWarning("Не получилось создать цвет из строки \"" + 
                 colorFromProperties + "\". Вместо него был использован белый");
                 return defaultColor;
             }

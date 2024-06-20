@@ -46,7 +46,6 @@ public class Scene {
         this.device = device;
     }
     
-    // FIXME: Проверить и переделать логику рисования текста (см. отступы, размер шрифтв)
     public void create() {
         // Определяем параметры устройства и создаем сцену
         deviceName = device.getVendor().toString() + " " + device.getDeviceName();
@@ -117,7 +116,6 @@ public class Scene {
             backgroundImg.getHeight(), 
             null
         );
-        logger.logInfo("Фоновое изображение было отрисовано на сцене");
     }
 
     private void drawLogo(Graphics2D g, Logo logoImg) {
@@ -130,7 +128,6 @@ public class Scene {
             logoImg.getHeight(), 
             null
         );
-        logger.logInfo("Логотип был отрисован на сцене");
     }
 
     private int getStringWidth(String string) {

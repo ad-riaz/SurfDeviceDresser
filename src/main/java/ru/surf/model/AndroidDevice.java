@@ -37,11 +37,9 @@ public class AndroidDevice extends Device implements Comparable<AndroidDevice> {
 
         this.ui = ui;
         this.serialNumber = serialNumber;
-        logger.logInfo("Объект AndroidDevice был успешно создан");
     }
 
     public AndroidDevice() {
-        logger.logInfo("Объект AndroidDevice был успешно создан");
     }
 
     public String getUi() {

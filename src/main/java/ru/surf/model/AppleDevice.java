@@ -32,11 +32,9 @@ public class AppleDevice extends Device implements Comparable<AppleDevice> {
             macAddress
         );
         this.udid = udid;
-        logger.logInfo("Объект AppleDevice был успешно создан");
     }    
 
     public AppleDevice() {
-        logger.logInfo("Объект AppleDevice был успешно создан");
     }
 
     public String getUdid() {

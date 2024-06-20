@@ -14,6 +14,5 @@ public class BackgroundImg extends Img {
     public BackgroundImg(int screenWidth, int screenHeight, int xPosOnCanvas, int yPosOnCanvas) {
         super(screenWidth, screenHeight, xPosOnCanvas, yPosOnCanvas, filePath);
         this.image = ImageTransformer.scaleAndCropImage(screenWidth, screenHeight, this.getImage());
-        logger.logInfo("Объект Background был успешно создан");
     }
 }
