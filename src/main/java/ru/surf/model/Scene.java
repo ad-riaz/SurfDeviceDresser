@@ -18,13 +18,14 @@ public class Scene {
     private final Loggger logger = Loggger.getInstance();
     
     // Параметры сцены
-    public  Color   textColor;
     private int     width;
     private int     height;
-    private File    outputFile; 
     private int     defaultFontSize;
-    private int     lineHeight;
+    private int     lineGap;
+    private int     defaultLineGap = 75;
+    private Color   textColor;
     private Font    font;
+    private File    outputFile; 
 
     // Параметры устройства
     private Device device;
@@ -60,11 +61,12 @@ public class Scene {
         textColor = ColorCreator.create(
             AppPropertiesReader.getInstance().readProperty("fontColor", "255,255,255")
         );
-        lineHeight = (int) Math.round(height * 0.02 / 5);
-        outputFile = new File(deviceName.replace(" ", "_") + "_" + os.replace(" ", "_") + ".png");
+        lineGap = AppPropertiesReader.getInstance().readIntegerValue("gapBetweenLines", defaultLineGap);
+        outputFile = new File(deviceName.replace(" ", "_") + "_" + 
+                    os.replace(" ", "_") + ".png");
 
         // Определяем используемые фон и логотип
-        defineImages(this.width, this.height);
+        defineImages(width, height);
 
         // Создаем 2D графику
         createGraphics();
@@ -143,14 +145,15 @@ public class Scene {
         if ((width - getStringWidth(string)) >= 100) {
             int deviceNameStringX = (width - getStringWidth(string)) / 2;
             g.drawString(string, deviceNameStringX, yPos);
-            return (getStringHeight() * 2 + lineHeight);
+            return (getStringHeight() + lineGap);
         } else {
             String[] lines = Utilities.splitLongString(string).split("\n");
+            int semigap = lineGap / 4;
             for (int i = 0; i < 2; i++) {
                 int x = (width - getStringWidth(lines[i])) / 2;
-                g.drawString(lines[i], x, yPos + getStringHeight() * i + lineHeight * i);
+                g.drawString(lines[i], x, yPos + getStringHeight() * i + semigap * i);
             }
-            return (getStringHeight() * 2 + lineHeight * 2);
+            return (getStringHeight() * 2 + semigap + lineGap);
         }
     }
 }
