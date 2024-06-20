@@ -11,8 +11,6 @@ import java.nio.charset.StandardCharsets;
 
 import javax.imageio.ImageIO;
 
-import ru.surf.model.Img;
-
 public class ImageFromFileReader {
     private final static Loggger logger = Loggger.getInstance();
 
