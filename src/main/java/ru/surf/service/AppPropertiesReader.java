@@ -35,7 +35,7 @@ public class AppPropertiesReader {
 
     public String readProperty(String prop, String defaultValue) {
         String value = props.getProperty(prop);
-        if (value == null || value.isBlank()) {
+        if (value == null || value.isEmpty()) {
             logger.logWarning("Не удалось прочитать значение " + prop + 
             " в файле " + propsFilePath + "\n" +
             "Было использовано значение по умолчанию: " + defaultValue);
