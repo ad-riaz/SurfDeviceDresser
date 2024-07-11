@@ -1,7 +1,6 @@
 package ru.surf.model;
 
 import ru.surf.enums.OS;
-import ru.surf.enums.Vendor;
 import ru.surf.service.Loggger; 
 
 public class AppleDevice extends Device implements Comparable<AppleDevice> {
@@ -9,7 +8,7 @@ public class AppleDevice extends Device implements Comparable<AppleDevice> {
     private String udid;
     
     public AppleDevice(
-        Vendor vendor, 
+        String vendor, 
         String deviceName, 
         String shortDeviceName, 
         OS osType, 
