@@ -42,9 +42,17 @@ public class Scene {
     private Graphics2D      g;
 
     private SceneProperties sceneProperties = SceneProperties.getInstance();
+    private File outDirectory;
     
 
-    public Scene() {}
+    public Scene() {
+        String userHome = System.getProperty("user.home");
+        String directoryPath = userHome + File.separator + "desktop" + File.separator + "SurfDeviceDresser";
+        outDirectory = new File(directoryPath);
+        if (!outDirectory.exists()) {
+            outDirectory.mkdirs();
+        }
+    }
     
     public void init(Device device) {
         this.device = device;
@@ -62,8 +70,7 @@ public class Scene {
         font.deriveFont(defaultFontSize);
         textColor = ColorCreator.create(sceneProperties.getFontColor());
         lineGap = sceneProperties.getGapBetweenLines();
-        // FIXME: Создать папку при генерации изображений. См. шпаргалку на рабочем столе
-        outputFile = new File(deviceName.replace(" ", "_") + "_" +
+        outputFile = new File(outDirectory, deviceName.replace(" ", "_") + "_" +
                     os.replace(" ", "_") + ".png");
 
         // Определяем используемые фон и логотип
