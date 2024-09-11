@@ -23,64 +23,95 @@ public class DeviceFromGoogleSheetsFactory {
         try {
             response = GoogleSheetsReader.getValues(OSType, rangeStart, rangeEnd);
             values = response.getValues();
-
-            if (values == null || values.isEmpty()) {
-                logger.logWarning("No data found from Google Sheets.");
-                return devices;
-            } else {
-                for (int j = 1; j < values.size(); j++) {
-                    Device device;
-                    OS os;
-
-                    if (OSType.toLowerCase().equals("ios")) {
-                        device = new AppleDevice();
-                        os = OS.IOS;
-                    } else if (OSType.toLowerCase().equals("ipados")) {
-                        device = new AppleDevice();
-                        os = OS.IPADOS;
-                    } else {
-                        device = new AndroidDevice();
-                        os = OS.ANDROID;
-                    }
-
-                    device.setOsType(os);
-
-                    for (int i = 0; i < values.get(j).size(); i++) {
-                        switch (i) {
-                            case 0:
-                                device.setVendor(values.get(j).get(i).toString());
-                                break;
-                            case 1:
-                                device.setDeviceName(values.get(j).get(i).toString());
-                                break;
-                            case 2:
-                                device.setOsVersion(values.get(j).get(i).toString());
-                                break;
-                            case 3:
-                                device.setShortDeviceName(values.get(j).get(i).toString());
-                                break;
-                            case 4:
-                                device.setScreenWidth(Integer.parseInt(values.get(j).get(i).toString()));
-                                break;
-                            case 5:
-                                device.setScreenHeight(Integer.parseInt(values.get(j).get(i).toString()));
-                                break;
-                            case 6:
-                                device.setScreenDiag(Double.parseDouble(values.get(j).get(i).toString()));
-                                break;
-                        }
-                    }
-                    devices.add(device);
-                }
-            }
         } catch (IOException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
+            return devices;
         } catch (GeneralSecurityException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
-        } finally {
             return devices;
         }
+
+        if (values == null || values.isEmpty()) {
+            logger.logWarning("No data found from Google Sheets.");
+            return devices;
+        } else {
+            for (int j = 1; j < values.size(); j++) {
+                Device device;
+                OS os;
+                boolean areDeviceFieldsCorrect = true;
+
+                if (OSType.toLowerCase().equals("ios")) {
+                    device = new AppleDevice();
+                    os = OS.IOS;
+                } else if (OSType.toLowerCase().equals("ipados")) {
+                    device = new AppleDevice();
+                    os = OS.IPADOS;
+                } else {
+                    device = new AndroidDevice();
+                    os = OS.ANDROID;
+                }
+
+                device.setOsType(os);
+
+                for (int i = 0; i < values.get(j).size(); i++) {
+                    String value = values.get(j).get(i).toString();
+
+                    if (i <= 6) {
+                        if (value.isEmpty() || value == null) {
+                            areDeviceFieldsCorrect = false;
+                            int gSheetsLine = j + 1;
+                            logger.logError("Некоторые данные об устройстве в строке " + gSheetsLine + " в таблице '" + OSType + "' пусты! Изображение для него не было создано.\nЗаполни отсутствующую информацию и повтори процесс генерации изображений.");
+                            break;
+                        }
+                    }
+
+                    switch (i) {
+                        case 0:
+                            device.setVendor(value);
+                            break;
+                        case 1:
+                            device.setDeviceName(value);
+                            break;
+                        case 2:
+                            device.setOsVersion(value);
+                            break;
+                        case 3:
+                            device.setShortDeviceName(value);
+                            break;
+                        case 4:
+                            try {
+                                Integer.parseInt(value);
+                            } catch(NumberFormatException e) {
+                                logger.logError("Не удалось создать изображение для устройства, так как поле 'Ширина экрана' в таблице имеет не корректный формат!\n Проверь данные в исходной таблице со списком устройств в ячейке в строке " + i+1 + " и столбце " + j+1 + " - значение должно быть типа integer.");
+                                continue;
+                            }
+                            device.setScreenWidth(Integer.parseInt(value));
+                        case 5:
+                            try {
+                                Integer.parseInt(value);
+                            } catch(NumberFormatException e) {
+                                logger.logError("Не удалось создать изображение для устройства, так как поле 'Высота экрана' в таблице имеет не корректный формат!\n Проверь данные в исходной таблице со списком устройств в ячейке в строке " + i+1 + " и столбце " + j+1 + " - значение должно быть типа integer.");
+                                continue;
+                            }
+                            device.setScreenHeight(Integer.parseInt(value));
+                        case 6:
+                            try {
+                                Double.parseDouble(value);
+                            } catch (NumberFormatException e){
+                                logger.logError("Не удалось создать изображение для устройства, так как поле 'Диагональ экрана' в таблице имеет не корректный формат!\n Проверь данные в исходной таблице со списком устройств в ячейке в строке " + i+1 + " и столбце " + j+1 + " - значение должно быть типа double.");
+                                continue;
+                            }
+                            device.setScreenDiag(Double.parseDouble(value));
+                    }
+                }
+                if (areDeviceFieldsCorrect) {
+                    devices.add(device);
+                }
+            }
+        }
+
+        return devices;
     }
 }

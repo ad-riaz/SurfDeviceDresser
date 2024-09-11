@@ -8,7 +8,6 @@ import java.io.File;
 
 import javax.imageio.ImageIO;
 
-import ru.surf.service.AppPropertiesReader;
 import ru.surf.service.ColorCreator;
 import ru.surf.service.FontService;
 import ru.surf.service.Loggger;
@@ -24,12 +23,13 @@ public class Scene {
     private int     lineGap;
     private int     defaultLineGap = 75;
     private Color   textColor;
-    private Font    font;
+    private Font    font = FontService.setEnvironmentFont(80);
     private File    outputFile; 
 
     // Параметры устройства
     private Device device;
-    private String deviceName;     
+    private String deviceName;
+    private String shortDeviceName;
     private String os;         
     private String screen;
     
@@ -40,15 +40,18 @@ public class Scene {
     // Создание изображения
     private BufferedImage   image;
     private Graphics2D      g;
+
+    private SceneProperties sceneProperties = SceneProperties.getInstance();
     
 
-    public Scene(Device device) {
-        this.device = device;
-    }
+    public Scene() {}
     
-    public void create() {
+    public void init(Device device) {
+        this.device = device;
+
         // Определяем параметры устройства и создаем сцену
         deviceName = device.getVendor().toString() + " " + device.getDeviceName();
+        shortDeviceName = device.getShortDeviceName();
         os = device.getOsType() + " " + device.getOsVersion();
         screen = device.getDiagonal() + "  " + device.getScreenWidth() + "x" + device.getScreenHeight();
 
@@ -56,12 +59,11 @@ public class Scene {
         width = device.getScreenWidth();
         height = device.getScreenHeight();
         defaultFontSize = FontService.defineDefaultFontSize(width);
-        font = FontService.setEnvironmentFont(defaultFontSize);
-        textColor = ColorCreator.create(
-            AppPropertiesReader.getInstance().readProperty("fontColor", "255,255,255")
-        );
-        lineGap = AppPropertiesReader.getInstance().readIntegerValue("gapBetweenLines", defaultLineGap);
-        outputFile = new File(deviceName.replace(" ", "_") + "_" + 
+        font.deriveFont(defaultFontSize);
+        textColor = ColorCreator.create(sceneProperties.getFontColor());
+        lineGap = sceneProperties.getGapBetweenLines();
+        // FIXME: Создать папку при генерации изображений. См. шпаргалку на рабочем столе
+        outputFile = new File(deviceName.replace(" ", "_") + "_" +
                     os.replace(" ", "_") + ".png");
 
         // Определяем используемые фон и логотип
@@ -79,7 +81,7 @@ public class Scene {
 
         // draw text
         int vertMiddle = height / 100 * 65;
-        String[] lines = {deviceName, screen, os};
+        String[] lines = {deviceName, shortDeviceName, screen, os};
         for (int i = 0; i < lines.length; i++) {
             vertMiddle += drawString(lines[i], vertMiddle);
         }        

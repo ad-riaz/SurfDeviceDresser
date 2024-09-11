@@ -1,5 +1,7 @@
 package ru.surf.service;
 
+import ru.surf.model.SceneProperties;
+
 import java.awt.Font;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -10,19 +12,15 @@ import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.awt.FontFormatException;
 import java.awt.GraphicsEnvironment;
+import java.util.Objects;
 
 public class FontService {
     private static final Loggger logger = Loggger.getInstance();
+    private static SceneProperties sceneProperties = SceneProperties.getInstance();
 
     public static Font setEnvironmentFont(int defaultFontSize) {
         GraphicsEnvironment ge = null;
-        String fontFilePath = AppPropertiesReader
-                                .getInstance()
-                                .readProperty(
-                                    "font",
-                                    getDefaultFontFilePath("default-font.ttf")
-                                );
-        
+        String fontFilePath = sceneProperties.getFontPath();
         ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
         Font defaultFont = loadFontFromFile(fontFilePath, defaultFontSize, "bold");
         ge.registerFont(defaultFont);
@@ -32,8 +30,8 @@ public class FontService {
     public static int defineDefaultFontSize(int screenWidth) {
         int fontSize = 80;
         float fontSizeFactor = 1.3f;
-        String stringFontSize = AppPropertiesReader.getInstance().readProperty("fontSize", "70");
-        String autoFontSizingEnabled = AppPropertiesReader.getInstance().readProperty("autoFontSizingEnabled", "false");
+        String stringFontSize = sceneProperties.getFontSize();
+        String autoFontSizingEnabled = sceneProperties.getAutoFontSizingEnabled();
 
         try {
             int customFontSize = Integer.parseInt(stringFontSize);
@@ -100,9 +98,9 @@ public class FontService {
         }
     }
 
-    private static String getDefaultFontFilePath(String filename) {
+    public static String getDefaultFontFilePath(String filename) {
         ClassLoader cl = ImageFromFileReader.class.getClassLoader();
-        String defaultPath = cl.getResource("fonts/" + filename).toString();
+        String defaultPath = Objects.requireNonNull(cl.getResource("fonts/" + filename)).toString();
 
         try {
             defaultPath = URLDecoder.decode(
