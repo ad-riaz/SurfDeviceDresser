@@ -8,6 +8,7 @@ import java.util.List;
 import com.google.api.services.sheets.v4.model.ValueRange;
 
 import ru.surf.enums.OS;
+import ru.surf.exceptions.WrongSpreadsheetIdException;
 import ru.surf.model.AndroidDevice;
 import ru.surf.model.AppleDevice;
 import ru.surf.model.Device;
@@ -23,14 +24,12 @@ public class DeviceFromGoogleSheetsFactory {
         try {
             response = GoogleSheetsReader.getValues(OSType, rangeStart, rangeEnd);
             values = response.getValues();
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-            return devices;
+        }  catch (WrongSpreadsheetIdException e) {
+            throw e;
         } catch (GeneralSecurityException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-            return devices;
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            throw new RuntimeException(e.toString());
         }
 
         if (values == null || values.isEmpty()) {

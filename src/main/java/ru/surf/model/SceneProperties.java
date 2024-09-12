@@ -5,7 +5,7 @@ import ru.surf.service.FontService;
 import ru.surf.service.ImageFromFileReader;
 
 public class SceneProperties {
-    private static SceneProperties instance; // Статический экземпляр синглтона
+    private static SceneProperties instance;
     private String backgroundPath;
     private String logoPath;
     private int logoWidthPercentage;
@@ -15,21 +15,22 @@ public class SceneProperties {
     private String fontSize;
     private String autoFontSizingEnabled;
     private int gapBetweenLines;
+    private String spreadsheetId;
     private AppPropertiesReader propertiesReader = AppPropertiesReader.getInstance();
 
     private SceneProperties() {
-        this.backgroundPath = propertiesReader.readProperty("backgroundPath", ImageFromFileReader.getDefaultfilePath("background.jpg"));
-        this.logoPath = propertiesReader.readProperty("logoPath", ImageFromFileReader.getDefaultfilePath("logo.png"));
-        this.logoWidthPercentage = propertiesReader.readIntegerValue("logoWidthPercentage", 90);
-        this.yPosOnCanvas = propertiesReader.readIntegerValue("yPosOnCanvas", 100);
-        this.fontPath = propertiesReader.readProperty("font", FontService.getDefaultFontFilePath("default-font.ttf"));
-        this.fontColor = propertiesReader.readProperty("fontColor", "255,255,255");
-        this.fontSize = propertiesReader.readProperty("fontSize", "70");
-        this.autoFontSizingEnabled = propertiesReader.readProperty("autoFontSizingEnabled", "false");
-        this.gapBetweenLines = propertiesReader.readIntegerValue("gapBetweenLines", 75);
+        backgroundPath = propertiesReader.readProperty("backgroundPath", ImageFromFileReader.getDefaultfilePath("background.jpg"));
+        logoPath = propertiesReader.readProperty("logoPath", ImageFromFileReader.getDefaultfilePath("logo.png"));
+        logoWidthPercentage = propertiesReader.readIntegerValue("logoWidthPercentage", 90);
+        yPosOnCanvas = propertiesReader.readIntegerValue("yPosOnCanvas", 100);
+        fontPath = propertiesReader.readProperty("font", FontService.getDefaultFontFilePath("default-font.ttf"));
+        fontColor = propertiesReader.readProperty("fontColor", "255,255,255");
+        fontSize = propertiesReader.readProperty("fontSize", "70");
+        autoFontSizingEnabled = propertiesReader.readProperty("autoFontSizingEnabled", "false");
+        gapBetweenLines = propertiesReader.readIntegerValue("gapBetweenLines", 75);
+        spreadsheetId = propertiesReader.readProperty("spreadsheetId", "");
     }
 
-    // Метод для получения экземпляра синглтона
     public static SceneProperties getInstance() {
         if (instance == null) {
             synchronized (SceneProperties.class) { // Синхронизация для потокобезопасности
@@ -111,6 +112,14 @@ public class SceneProperties {
 
     public void setGapBetweenLines(int gapBetweenLines) {
         this.gapBetweenLines = gapBetweenLines;
+    }
+
+    public String getSpreadsheetId() {
+        return spreadsheetId;
+    }
+
+    public void setSpreadsheetId(String spreadsheetId) {
+        this.spreadsheetId = spreadsheetId;
     }
 
     @Override

@@ -13,27 +13,43 @@ import com.google.api.client.util.store.FileDataStoreFactory;
 import com.google.api.services.sheets.v4.Sheets;
 import com.google.api.services.sheets.v4.SheetsScopes;
 import com.google.api.services.sheets.v4.model.ValueRange;
+import ru.surf.exceptions.WrongCredentialsJsonPathException;
+import ru.surf.exceptions.WrongSpreadsheetIdException;
+import ru.surf.model.SceneProperties;
+
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.security.GeneralSecurityException;
 import java.util.Collections;
+import java.util.InvalidPropertiesFormatException;
 import java.util.List;
 
 
 public class GoogleSheetsReader {
+    private static SceneProperties sceneProperties = SceneProperties.getInstance();
+    private static AppPropertiesReader propertiesReader = AppPropertiesReader.getInstance();
+
     private static final String APPLICATION_NAME = "SurfDeviceDresser";
     private static final JsonFactory JSON_FACTORY = GsonFactory.getDefaultInstance();
     private static final String TOKENS_DIRECTORY_PATH = "tokens";
 
     private static final List<String> SCOPES = Collections.singletonList(SheetsScopes.SPREADSHEETS_READONLY);
-    // TODO: Читать путь до файла с кредами из application.properties
-    private static final String CREDENTIALS_FILE_PATH = "/credentials.json";
+    private static final String CREDENTIALS_FILE_PATH = propertiesReader.readProperty("credentialsJsonPath", "credentials.json");
 
     private static Credential getCredentials(final NetHttpTransport HTTP_TRANSPORT) throws IOException {
         // Load client secrets.
-        InputStream in = GoogleSheetsReader.class.getResourceAsStream(CREDENTIALS_FILE_PATH);
+        InputStream in = null;
+
+        try {
+            in = Files.newInputStream(Paths.get(CREDENTIALS_FILE_PATH));
+        } catch (IOException e) {
+            throw new WrongCredentialsJsonPathException(CREDENTIALS_FILE_PATH);
+        }
+
         if (in == null) {
             throw new FileNotFoundException("Resource not found: " + CREDENTIALS_FILE_PATH);
         }
@@ -49,11 +65,15 @@ public class GoogleSheetsReader {
         return new AuthorizationCodeInstalledApp(flow, receiver).authorize("user");
     }
 
-    public static ValueRange getValues(String sheetName, String rangeStart, String rangeEnd) throws IOException, GeneralSecurityException {
+    public static ValueRange getValues(String sheetName, String rangeStart, String rangeEnd) throws IOException, GeneralSecurityException, WrongSpreadsheetIdException {
         // Build a new authorized API client service.
         final NetHttpTransport HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
-        // TODO: Прочитать из application.properties
-        final String spreadsheetId = "1Gcx6EEg7exG5NJp739-WhIcOZRPPZqsVzu0ElwyGayY";
+        final String spreadsheetId = sceneProperties.getSpreadsheetId();
+
+        if (spreadsheetId.isEmpty()) {
+            throw new WrongSpreadsheetIdException();
+        }
+
         ValueRange response = null;
         String range = "";
         if (sheetName.contains(" ")) {
