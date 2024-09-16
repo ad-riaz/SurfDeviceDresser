@@ -11,7 +11,7 @@ public class AndroidDevice extends Device implements Comparable<AndroidDevice> {
     private String serialNumber;
 
     public AndroidDevice(
-        Vendor vendor,
+        String vendor,
         String deviceName,
         String shortDeviceName,
         OS osType,

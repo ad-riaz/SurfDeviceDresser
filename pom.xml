@@ -5,10 +5,10 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>ru.surf</groupId>
-  <artifactId>device-background-generator</artifactId>
-  <version>1.0-SNAPSHOT</version>
+  <artifactId>SurfDeviceDresser</artifactId>
+  <version>1.0</version>
 
-  <name>device-background-generator</name>
+  <name>SurfDeviceDresser</name>
   <url>surf.ru</url>
 
   <properties>
@@ -25,6 +25,23 @@
       <scope>test</scope>
     </dependency>
     
+    <dependency>
+        <groupId>com.google.api-client</groupId>
+        <artifactId>google-api-client</artifactId>
+        <version>2.0.0</version>
+    </dependency>
+
+    <dependency>
+        <groupId>com.google.oauth-client</groupId>
+        <artifactId>google-oauth-client-jetty</artifactId>
+        <version>1.34.1</version>
+    </dependency>
+
+    <dependency>
+        <groupId>com.google.apis</groupId>
+        <artifactId>google-api-services-sheets</artifactId>
+        <version>v4-rev20220927-2.0.0</version>
+    </dependency>
         
   </dependencies>
 
@@ -43,11 +60,11 @@
         </plugin>
         <plugin>
           <artifactId>maven-compiler-plugin</artifactId>
-	  <version>3.8.0</version>
-	  <configuration>
-                <source>8</source>
-                <target>8</target>
-            </configuration>
+          <version>3.8.0</version>
+          <configuration>
+              <source>8</source>
+              <target>8</target>
+          </configuration>
         </plugin>
         <plugin>
           <artifactId>maven-surefire-plugin</artifactId>

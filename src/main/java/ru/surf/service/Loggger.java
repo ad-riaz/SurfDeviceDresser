@@ -13,15 +13,15 @@ public class Loggger {
         return instance;
     }
 
-    public static void logInfo(String message) {
+    public void logInfo(String message) {
         logger.log(Level.INFO, message);
     }
 
-    public static void logWarning(String message) {
+    public void logWarning(String message) {
         logger.log(Level.WARNING, message);
     }
 
-    public static void logError(String message) {
+    public void logError(String message) {
         logger.log(Level.SEVERE, message);
     }
 }

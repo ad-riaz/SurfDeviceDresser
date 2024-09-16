@@ -40,7 +40,7 @@ public class DeviceInformationConsoleReader {
                     continue;
                 }
             } else {
-                logger.logError("Ошибка ввода. Ты ввел не целое число.");
+                System.out.println("Ошибка ввода. Ты ввел не целое число.");
                 continue;
             }
 

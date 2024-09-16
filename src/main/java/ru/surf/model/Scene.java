@@ -8,7 +8,6 @@ import java.io.File;
 
 import javax.imageio.ImageIO;
 
-import ru.surf.service.AppPropertiesReader;
 import ru.surf.service.ColorCreator;
 import ru.surf.service.FontService;
 import ru.surf.service.Loggger;
@@ -22,14 +21,15 @@ public class Scene {
     private int     height;
     private int     defaultFontSize;
     private int     lineGap;
-    private int     defaultLineGap = 75;
     private Color   textColor;
-    private Font    font;
-    private File    outputFile; 
+    private Font    font = FontService.setEnvironmentFont(80);
+    private File    outputFile;
+    private String  autoFontSizingEnabled;
 
     // Параметры устройства
     private Device device;
-    private String deviceName;     
+    private String deviceName;
+    private String shortDeviceName;
     private String os;         
     private String screen;
     
@@ -40,29 +40,52 @@ public class Scene {
     // Создание изображения
     private BufferedImage   image;
     private Graphics2D      g;
+
+    private SceneProperties sceneProperties = SceneProperties.getInstance();
+    private File outDirectory;
     
 
-    public Scene(Device device) {
-        this.device = device;
+    public Scene() {
+        String userHome = System.getProperty("user.home");
+        String directoryPath = userHome + File.separator + "desktop" + File.separator + "SurfDeviceDresser";
+        outDirectory = new File(directoryPath);
+        if (!outDirectory.exists()) {
+            outDirectory.mkdirs();
+        }
     }
     
-    public void create() {
+    public void init(Device device) {
+        this.device = device;
+
         // Определяем параметры устройства и создаем сцену
         deviceName = device.getVendor().toString() + " " + device.getDeviceName();
+        shortDeviceName = device.getShortDeviceName();
         os = device.getOsType() + " " + device.getOsVersion();
         screen = device.getDiagonal() + "  " + device.getScreenWidth() + "x" + device.getScreenHeight();
 
         // Определяем параметры сцены
+        outputFile = new File(
+                outDirectory,
+                deviceName.replace(" ", "_") + "_" +
+                        os.replace(" ", "_") + ".png");
         width = device.getScreenWidth();
         height = device.getScreenHeight();
+        // Определяем параметры текста
         defaultFontSize = FontService.defineDefaultFontSize(width);
-        font = FontService.setEnvironmentFont(defaultFontSize);
-        textColor = ColorCreator.create(
-            AppPropertiesReader.getInstance().readProperty("fontColor", "255,255,255")
-        );
-        lineGap = AppPropertiesReader.getInstance().readIntegerValue("gapBetweenLines", defaultLineGap);
-        outputFile = new File(deviceName.replace(" ", "_") + "_" + 
-                    os.replace(" ", "_") + ".png");
+        font = font.deriveFont((float) defaultFontSize);
+        textColor = ColorCreator.create(sceneProperties.getFontColor());
+
+        // Определить отступ между строками
+        lineGap = sceneProperties.getGapBetweenLines();
+        autoFontSizingEnabled = sceneProperties.getAutoFontSizingEnabled();
+
+        if (autoFontSizingEnabled.equals("true")) {
+            if (width <= 827) {
+                lineGap = (int) (lineGap / 1.3f);
+            } else if (width > 1283) {
+                lineGap = (int) (lineGap * 1.3f);
+            }
+        }
 
         // Определяем используемые фон и логотип
         defineImages(width, height);
@@ -77,12 +100,12 @@ public class Scene {
         drawBackground(g, backgroundImg);
         drawLogo(g, logoImg);
 
-        // draw text
+        // Настройки текста на сцене
         int vertMiddle = height / 100 * 65;
-        String[] lines = {deviceName, screen, os};
+        String[] lines = {deviceName, shortDeviceName, screen, os};
         for (int i = 0; i < lines.length; i++) {
             vertMiddle += drawString(lines[i], vertMiddle);
-        }        
+        }
 
         g.dispose();
     }

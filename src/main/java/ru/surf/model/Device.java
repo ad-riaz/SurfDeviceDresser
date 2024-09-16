@@ -4,7 +4,7 @@ import ru.surf.enums.OS;
 import ru.surf.enums.Vendor;
 
 public abstract class Device {
-    protected Vendor vendor;
+    protected String vendor;
     protected String deviceName;
     protected String shortDeviceName;
     protected OS osType;
@@ -15,7 +15,7 @@ public abstract class Device {
     protected String macAddress;
     
     public Device(
-        Vendor vendor,
+        String vendor,
         String deviceName,
         String shortDeviceName,
         OS osType,
@@ -39,11 +39,15 @@ public abstract class Device {
     public Device() {
     }
 
-    public Vendor getVendor() {
+    public String getVendor() {
         return vendor;
     }
 
     public void setVendor(Vendor vendor) {
+        this.vendor = vendor.toString();
+    }
+
+    public void setVendor(String vendor) {
         this.vendor = vendor;
     }
 

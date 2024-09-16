@@ -6,6 +6,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 
@@ -40,11 +41,15 @@ public class ImageFromFileReader {
 
     public static String getDefaultfilePath(String filename) {
         ClassLoader cl = ImageFromFileReader.class.getClassLoader();
-        String defaultPath = URLDecoder.decode(
-            cl.getResource("img/" + filename)
-            .toString(),
-            StandardCharsets.UTF_8
-        );
+        String defaultPath = cl.getResource("img/" + filename).toString();
+
+        try {
+            defaultPath = URLDecoder.decode(
+                defaultPath,
+                StandardCharsets.UTF_8.toString());
+        } catch(UnsupportedEncodingException e) {
+            logger.logError("Сharacter encoding is not supported");
+        }
 
         if (
             defaultPath.contains("jar:")

@@ -94,3 +94,7 @@ nb-configuration.xml
 ##############################
 ./*.png
 ./*.jpg
+*.png
+*.jpg
+src/main/resources/credentials.json
+tokens/StoredCredential

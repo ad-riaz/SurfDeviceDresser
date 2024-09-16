@@ -7,9 +7,8 @@ import ru.surf.service.ImageFromFileReader;
 
 public class BackgroundImg extends Img {
     private final Loggger logger = Loggger.getInstance();
-    private static String filePath = AppPropertiesReader.getInstance()
-        .readProperty(  "backgroundPath", 
-                            ImageFromFileReader.getDefaultfilePath("background.jpg"));
+    private static SceneProperties sceneProperties = SceneProperties.getInstance();
+    private static String filePath = sceneProperties.getBackgroundPath();
 
     public BackgroundImg(int screenWidth, int screenHeight, int xPosOnCanvas, int yPosOnCanvas) {
         super(screenWidth, screenHeight, xPosOnCanvas, yPosOnCanvas, filePath);
