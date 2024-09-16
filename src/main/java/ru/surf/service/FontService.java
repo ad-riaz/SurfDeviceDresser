@@ -29,7 +29,7 @@ public class FontService {
 
     public static int defineDefaultFontSize(int screenWidth) {
         int fontSize = 80;
-        float fontSizeFactor = 1.3f;
+        float fontSizeFactor = 1.5f;
         String stringFontSize = sceneProperties.getFontSize();
         String autoFontSizingEnabled = sceneProperties.getAutoFontSizingEnabled();
 
@@ -42,12 +42,12 @@ public class FontService {
         }
 
         if (autoFontSizingEnabled.equals("true")) {
-            if (screenWidth <= 830) {
-                fontSize /= fontSizeFactor;
-            } else if (screenWidth > 1440) {
-                fontSize *= fontSizeFactor;
+            if (screenWidth <= 827) {
+                fontSize = (int) (fontSize / fontSizeFactor);
+            } else if (screenWidth > 1283) {
+                fontSize = (int) (fontSize * fontSizeFactor);
             }
-        }       
+        }
 
         return fontSize;
     }

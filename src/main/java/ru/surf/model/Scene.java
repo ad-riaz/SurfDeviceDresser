@@ -21,10 +21,10 @@ public class Scene {
     private int     height;
     private int     defaultFontSize;
     private int     lineGap;
-    private int     defaultLineGap = 75;
     private Color   textColor;
     private Font    font = FontService.setEnvironmentFont(80);
-    private File    outputFile; 
+    private File    outputFile;
+    private String  autoFontSizingEnabled;
 
     // Параметры устройства
     private Device device;
@@ -64,14 +64,28 @@ public class Scene {
         screen = device.getDiagonal() + "  " + device.getScreenWidth() + "x" + device.getScreenHeight();
 
         // Определяем параметры сцены
+        outputFile = new File(
+                outDirectory,
+                deviceName.replace(" ", "_") + "_" +
+                        os.replace(" ", "_") + ".png");
         width = device.getScreenWidth();
         height = device.getScreenHeight();
+        // Определяем параметры текста
         defaultFontSize = FontService.defineDefaultFontSize(width);
-        font.deriveFont(defaultFontSize);
+        font = font.deriveFont((float) defaultFontSize);
         textColor = ColorCreator.create(sceneProperties.getFontColor());
+
+        // Определить отступ между строками
         lineGap = sceneProperties.getGapBetweenLines();
-        outputFile = new File(outDirectory, deviceName.replace(" ", "_") + "_" +
-                    os.replace(" ", "_") + ".png");
+        autoFontSizingEnabled = sceneProperties.getAutoFontSizingEnabled();
+
+        if (autoFontSizingEnabled.equals("true")) {
+            if (width <= 827) {
+                lineGap = (int) (lineGap / 1.3f);
+            } else if (width > 1283) {
+                lineGap = (int) (lineGap * 1.3f);
+            }
+        }
 
         // Определяем используемые фон и логотип
         defineImages(width, height);
@@ -86,12 +100,12 @@ public class Scene {
         drawBackground(g, backgroundImg);
         drawLogo(g, logoImg);
 
-        // draw text
+        // Настройки текста на сцене
         int vertMiddle = height / 100 * 65;
         String[] lines = {deviceName, shortDeviceName, screen, os};
         for (int i = 0; i < lines.length; i++) {
             vertMiddle += drawString(lines[i], vertMiddle);
-        }        
+        }
 
         g.dispose();
     }
